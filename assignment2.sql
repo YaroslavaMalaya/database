@@ -158,6 +158,8 @@ FROM
         JOIN
     services s ON a.service_id = s.id;
 
+-- HW1
+
 -- SHOW TABLES;
 -- SELECT * FROM services;
 -- SELECT * FROM product;
@@ -182,6 +184,8 @@ FROM
 -- SELECT customer.name, customer.phone, SUM(payment.amount) AS total_spent FROM payment  
 --     JOIN customer ON payment.customer_id = customer.id  WHERE MONTH(payment.date) = 2 -- this month
 --     GROUP BY payment.customer_id ORDER BY total_spent DESC LIMIT 5;
+
+-- HW2
 
 SELECT p.id AS product_id, p.name AS product_name,
     p.quantity - IFNULL(SUM(s2p.count), 0) AS quantity_left
