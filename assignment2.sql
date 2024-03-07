@@ -1,3 +1,6 @@
+CREATE DATABASE beauty_salon;
+USE beauty_salon;
+
 CREATE TABLE services (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -27,7 +30,7 @@ CREATE TABLE employee (
     name VARCHAR(255) NOT NULL,
     phone VARCHAR(14) NOT NULL,
     email VARCHAR(255),
-    position SET('Stylist', 'Colorist', 'Manicurist', 'Cosmetologist', 'Receptionist') NOT NULL,
+    position SET('Master', 'Trainee') NOT NULL,
     salary DOUBLE(7, 2) NOT NULL
 );
 
@@ -53,21 +56,19 @@ CREATE TABLE payment (
 );
 
 CREATE TABLE services2products (
-    id INT AUTO_INCREMENT PRIMARY KEY,
     service_id INT NOT NULL,
     product_id INT NOT NULL,
-    UNIQUE (service_id, product_id),
+    PRIMARY KEY (service_id, product_id),
     FOREIGN KEY (service_id) REFERENCES services(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
 CREATE TABLE employee_service (
-     id INT AUTO_INCREMENT PRIMARY KEY,
-     employee_id INT NOT NULL,
-     service_id INT NOT NULL,
-     UNIQUE (employee_id, service_id),
-     FOREIGN KEY (employee_id) REFERENCES employee(id),
-     FOREIGN KEY (service_id) REFERENCES services(id)
+    employee_id INT NOT NULL,
+    service_id INT NOT NULL,
+    PRIMARY KEY (employee_id, service_id),
+    FOREIGN KEY (employee_id) REFERENCES employee(id),
+    FOREIGN KEY (service_id) REFERENCES services(id)
 );
 
 INSERT INTO services (name, description, duration, price) VALUES
@@ -86,11 +87,11 @@ INSERT INTO product (name, description, quantity, cost) VALUES
 ('Facial Cream 2', 'Cream for facial treatment', 50, 1000.00);
 
 INSERT INTO employee (name, phone, email, position, salary) VALUES
-('Emily Carter', '+380664365804', 'emily1997@gmail.com', 'Stylist', 30000.00),
-('Sam Rivera', '+380950561127', 'sam.rivera@gmail.com', 'Colorist', 45000.00),
-('Jordan Flat', '+380657578321', 'jordanflat@gmail.com', 'Manicurist', 30000.00),
-('Casey Kim', '+380970746947', 'caseykiki@gmail.com', 'Cosmetologist', 50000.00),
-('Drew Morgan', '+380670768334', 'morgancap@gmail.com', 'Receptionist', 25000.00);
+('Emily Carter', '+380664365804', 'emily1997@gmail.com', 'Master', 30000.00), -- stylist and colorist
+('Sam Rivera', '+380950561127', 'sam.rivera@gmail.com', 'Master', 45000.00), -- colorist and stylist
+('Jordan Flat', '+380657578321', 'jordanflat@gmail.com', 'Trainee', 30000.00), -- manicurist and cosmetologist
+('Casey Kim', '+380970746947', 'caseykiki@gmail.com', 'Master', 50000.00), -- cosmetologist 
+('Drew Morgan', '+380670768334', 'morgancap@gmail.com', 'Trainee', 25000.00); -- receptionist 
 
 INSERT INTO services2products (service_id, product_id) VALUES
 (1, 1),
@@ -103,9 +104,12 @@ INSERT INTO services2products (service_id, product_id) VALUES
 
 INSERT INTO employee_service (employee_id, service_id) VALUES
 (1, 1),
+(1, 2),
+(2, 1),
 (2, 2),
 (3, 3),
 (3, 4),
+(3, 5),
 (4, 5);
 
 INSERT INTO customer (name, phone, email, address) VALUES
@@ -121,32 +125,27 @@ INSERT INTO customer (name, phone, email, address) VALUES
 ('Robert Patisson', '+380676071506', 'robpat97@gmail.com', '123 Koupline St'),
 ('Kim Kardashian', '+3809501843819', 'kimmi@gmail.com', '1 Travneva St');
 
-INSERT INTO appointment (customer_id, service_id, date, status) VALUES
-(1, 2, '2024-02-10 10:00:00', 'Scheduled'),
-(2, 4, '2024-02-12 12:30:00', 'Scheduled'),
-(3, 3, '2024-02-12 12:40:00', 'Scheduled'),
-(4, 1, '2024-02-13 09:30:00', 'Scheduled'),
-(5, 5, '2024-02-14 15:30:00', 'Scheduled'),
-(6, 2, '2024-02-15 10:00:00', 'Scheduled'),
-(7, 4, '2024-02-15 11:30:00', 'Scheduled'),
-(8, 3, '2024-02-16 12:40:00', 'Scheduled'),
-(1, 1, '2024-02-10 12:10:00', 'Scheduled'),
-(2, 5, '2024-02-11 11:00:00', 'Scheduled'),
-(3, 2, '2024-02-11 10:00:00', 'Scheduled'),
-(4, 4, '2024-02-12 12:40:00', 'Scheduled'),
-(5, 3, '2024-02-12 11:40:00', 'Scheduled'),
-(6, 1, '2024-02-13 10:30:00', 'Scheduled'),
-(7, 5, '2024-02-14 10:20:00', 'Scheduled'),
-(8, 2, '2024-02-14 10:00:00', 'Scheduled'),
-(1, 4, '2024-02-15 17:30:00', 'Scheduled'),
-(9, 3, '2024-02-15 10:40:00', 'Scheduled'),
-(10, 1, '2024-02-16 13:00:00', 'Scheduled'),
-(11, 5, '2024-02-16 11:00:00', 'Scheduled');
-
-UPDATE appointment a
-    INNER JOIN employee_service es ON es.service_id = a.service_id
-    SET a.employee_id = es.employee_id
-    WHERE a.employee_id != es.employee_id OR a.employee_id IS NULL;
+INSERT INTO appointment (customer_id, service_id, employee_id, date, status) VALUES
+(1, 2, 1, '2024-02-10 10:00:00', 'Scheduled'),
+(2, 4, 3, '2024-02-12 12:30:00', 'Scheduled'),
+(3, 3, 3, '2024-02-12 12:40:00', 'Scheduled'),
+(4, 1, 2, '2024-02-13 09:30:00', 'Scheduled'),
+(5, 5, 3, '2024-02-14 15:30:00', 'Scheduled'),
+(6, 2, 2, '2024-02-15 10:00:00', 'Scheduled'),
+(7, 4, 4, '2024-02-15 11:30:00', 'Scheduled'),
+(8, 3, 4, '2024-02-16 12:40:00', 'Scheduled'),
+(1, 1, 1, '2024-02-10 12:10:00', 'Scheduled'),
+(2, 5, 3, '2024-02-11 11:00:00', 'Scheduled'),
+(3, 2, 2, '2024-02-11 10:00:00', 'Scheduled'),
+(4, 4, 3, '2024-02-12 12:40:00', 'Scheduled'),
+(5, 3, 3, '2024-02-12 11:40:00', 'Scheduled'),
+(6, 1, 2, '2024-02-13 10:30:00', 'Scheduled'),
+(7, 5, 4, '2024-02-14 10:20:00', 'Scheduled'),
+(8, 2, 2, '2024-02-14 10:00:00', 'Scheduled'),
+(1, 4, 3, '2024-02-15 17:30:00', 'Scheduled'),
+(9, 3, 3, '2024-02-15 10:40:00', 'Scheduled'),
+(10, 1, 1, '2024-02-16 13:00:00', 'Scheduled'),
+(11, 5, 4, '2024-02-16 11:00:00', 'Scheduled');
 
 INSERT INTO payment (appointment_id, amount, method, date)
 SELECT
@@ -158,7 +157,6 @@ FROM
     appointment a
         JOIN
     services s ON a.service_id = s.id;
-
 
 -- SHOW TABLES;
 -- SELECT * FROM services;
@@ -184,9 +182,6 @@ FROM
 -- SELECT customer.name, customer.phone, SUM(payment.amount) AS total_spent FROM payment  
 --     JOIN customer ON payment.customer_id = customer.id  WHERE MONTH(payment.date) = 2 -- this month
 --     GROUP BY payment.customer_id ORDER BY total_spent DESC LIMIT 5;
-
-
--- HW2
 
 SELECT
     p.id AS product_id,
