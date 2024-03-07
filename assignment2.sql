@@ -144,12 +144,9 @@ INSERT INTO appointment (customer_id, service_id, date, status) VALUES
 (11, 5, '2024-02-16 11:00:00', 'Scheduled');
 
 UPDATE appointment a
-SET a.employee_id = (
-    SELECT es.employee_id
-    FROM employee_service es
-    WHERE es.service_id = a.service_id
-    LIMIT 1
-    );
+    INNER JOIN employee_service es ON es.service_id = a.service_id
+    SET a.employee_id = es.employee_id
+    WHERE a.employee_id != es.employee_id OR a.employee_id IS NULL;
 
 INSERT INTO payment (appointment_id, amount, method, date)
 SELECT
