@@ -76,7 +76,8 @@ INSERT INTO services (name, description, duration, price) VALUES
 ('Coloring', 'Hair colouring and highlights', 120, 2500.00),
 ('Manicure', 'Nail care service', 60, 450.00),
 ('Pedicure', 'Foot and nail care service', 60, 450.00),
-('Facial', 'Facial massage with suitable masks, creams and pilings', 90, 1200.00);
+('Facial', 'Facial massage with suitable masks, creams and pilings', 90, 1200.00),
+('Forehead botox', 'Botox in the forehead', 60, 2800.00);  -- data for hw3
 
 INSERT INTO product (name, description, quantity, cost) VALUES
 ('Shampoo', 'Hair cleaning product', 20, 550.50),
@@ -84,7 +85,9 @@ INSERT INTO product (name, description, quantity, cost) VALUES
 ('Nail Polish', 'Nail colouring product', 100, 84.99),
 ('Hair Dye', 'Product for hair colouring', 50, 789.99),
 ('Facial Cream 1', 'Cream for facial treatment', 50, 899.99),
-('Facial Cream 2', 'Cream for facial treatment', 50, 1000.00);
+('Facial Cream 2', 'Cream for facial treatment', 50, 1000.00),
+('Botox', 'Botox for forehead (dammy data)', 5, 1800.00),  -- data for hw3
+('Botox', 'Botox for forehead (dammy data)', 0, 1200.00);  -- data for hw3
 
 INSERT INTO employee (name, phone, email, position, salary) VALUES
 ('Emily Carter', '+380664365804', 'emily1997@gmail.com', 'Master', 30000.00), -- stylist and colorist
@@ -123,7 +126,8 @@ INSERT INTO customer (name, phone, email, address) VALUES
 ('Kylie Jenner', '+380950501629', 'jennertop@gmail.com', '12 Yamska St'),
 ('Emma Stoune', '+380993400124', 'emma12345@gmail.com', '91 Wendy St'),
 ('Robert Patisson', '+380676071506', 'robpat97@gmail.com', '123 Koupline St'),
-('Kim Kardashian', '+3809501843819', 'kimmi@gmail.com', '1 Travneva St');
+('Kim Kardashian', '+3809501843819', 'kimmi@gmail.com', '1 Travneva St'),
+('Fennis Lorden', '+3809323543819', 'fennis@gmail.com', '12 Gerbers St'); -- data for hw3
 
 INSERT INTO appointment (customer_id, service_id, employee_id, date, status) VALUES
 (1, 2, 1, '2024-02-10 10:00:00', 'Scheduled'),
@@ -145,7 +149,9 @@ INSERT INTO appointment (customer_id, service_id, employee_id, date, status) VAL
 (1, 4, 3, '2024-02-15 17:30:00', 'Scheduled'),
 (9, 3, 3, '2024-02-15 10:40:00', 'Scheduled'),
 (10, 1, 1, '2024-02-16 13:00:00', 'Scheduled'),
-(11, 5, 4, '2024-02-16 11:00:00', 'Scheduled');
+(11, 5, 4, '2024-02-16 11:00:00', 'Scheduled'),
+(12, 1, 1, '2024-05-16 13:00:00', 'Scheduled'), -- data for hw3
+(12, 5, 4, '2024-05-1 11:00:00', 'Scheduled');  -- data for hw3
 
 INSERT INTO payment (appointment_id, amount, method, date)
 SELECT
@@ -187,34 +193,61 @@ FROM
 
 -- HW2
 
-SELECT p.id AS product_id, p.name AS product_name,
-    p.quantity - IFNULL(SUM(s2p.count), 0) AS quantity_left
-    FROM product p
-    LEFT JOIN (
-        SELECT s2p.product_id, COUNT(*) AS count
-        FROM services2products s2p
-        INNER JOIN appointment a ON s2p.service_id = a.service_id
-        GROUP BY s2p.product_id
-    ) AS s2p ON p.id = s2p.product_id
-    GROUP BY p.id;
+-- SELECT p.id AS product_id, p.name AS product_name,
+--     p.quantity - IFNULL(SUM(s2p.count), 0) AS quantity_left
+-- 	FROM product p
+-- 	LEFT JOIN (
+-- 		SELECT s2p.product_id, COUNT(*) AS count
+-- 		FROM services2products s2p
+-- 		INNER JOIN appointment a ON s2p.service_id = a.service_id
+-- 		GROUP BY s2p.product_id
+-- 	) AS s2p ON p.id = s2p.product_id
+-- 	GROUP BY p.id;
 
-SELECT e.id AS employee_id, e.name AS employee_name, s.name AS service_name, a.date AS start_time,
-    ADDTIME(a.date, SEC_TO_TIME(s.duration * 60)) AS end_time
-    FROM appointment a
-    INNER JOIN employee_service es ON a.employee_id = es.employee_id AND a.service_id = es.service_id
-    INNER JOIN employee e ON a.employee_id = e.id
-    INNER JOIN services s ON a.service_id = s.id
-    WHERE a.date BETWEEN '2024-02-10' AND '2024-02-17'
-    AND s.name = 'Coloring'
-    ORDER BY a.date;
+-- SELECT e.id AS employee_id, e.name AS employee_name, s.name AS service_name, a.date AS start_time,
+--     ADDTIME(a.date, SEC_TO_TIME(s.duration * 60)) AS end_time
+--     FROM appointment a
+--     INNER JOIN employee_service es ON a.employee_id = es.employee_id AND a.service_id = es.service_id
+--     INNER JOIN employee e ON a.employee_id = e.id
+--     INNER JOIN services s ON a.service_id = s.id
+--     WHERE a.date BETWEEN '2024-02-10' AND '2024-02-17'
+--     AND s.name = 'Coloring'
+--     ORDER BY a.date;
 
 -- index (bonus task)
 
-CREATE TABLE appointment_clone LIKE appointment;
-CREATE INDEX index_employee_id ON appointment_clone(employee_id);
+-- CREATE TABLE appointment_clone LIKE appointment;
+-- CREATE INDEX index_employee_id ON appointment_clone(employee_id);
 
-INSERT INTO appointment_clone (customer_id, service_id, employee_id, date, status)
-SELECT customer_id, service_id, employee_id, date, status FROM appointment;
+-- INSERT INTO appointment_clone (customer_id, service_id, employee_id, date, status)
+-- SELECT customer_id, service_id, employee_id, date, status FROM appointment;
 
-SELECT * FROM appointment WHERE employee_id = 1;
-SELECT * FROM appointment_clone WHERE employee_id = 1;
+-- SELECT * FROM appointment WHERE employee_id = 1;
+-- SELECT * FROM appointment_clone WHERE employee_id = 1;
+
+
+-- HW3
+-- with non-correlated subqueries result
+
+SELECT * FROM services WHERE duration = (SELECT MIN(duration) FROM services);
+UPDATE services SET price = 3000 WHERE duration = (SELECT MAX(duration) FROM (SELECT duration FROM services) AS subquery);
+DELETE FROM product WHERE quantity = (SELECT MIN(quantity) FROM (SELECT quantity FROM product) AS subquery);
+
+SELECT * FROM employee WHERE id IN (SELECT employee_id FROM employee_service WHERE service_id = 1);
+UPDATE product SET quantity = quantity + 10 WHERE id IN (SELECT product_id FROM services2products WHERE service_id = 2);
+DELETE FROM payment WHERE appointment_id IN (
+    SELECT id FROM appointment WHERE customer_id IN (SELECT id FROM customer WHERE phone = '+3809501843819'));
+DELETE FROM appointment WHERE customer_id IN (SELECT id FROM customer WHERE phone = '+3809501843819');
+
+SELECT * FROM employee WHERE id NOT IN (SELECT employee_id FROM appointment);
+UPDATE employee SET salary = salary * 1.1 WHERE id NOT IN (SELECT employee_id FROM employee_service WHERE service_id > 3);
+DELETE FROM product WHERE id NOT IN (SELECT product_id FROM services2products);
+
+SELECT * FROM services WHERE EXISTS (SELECT 1 FROM services2products WHERE product_id = 3);
+UPDATE services SET price = price * 1.1 WHERE EXISTS (SELECT * FROM product WHERE price > 2000);
+DELETE FROM services2products WHERE EXISTS (SELECT 1 FROM product WHERE quantity = 0);
+
+SELECT * FROM product WHERE NOT EXISTS (SELECT * FROM services2products WHERE product_id > 7);
+UPDATE employee SET salary = salary * 1.1 WHERE NOT EXISTS (
+    SELECT 1 FROM (SELECT * FROM employee) AS subquery WHERE subquery.phone = '+380630768334');
+DELETE FROM product WHERE NOT EXISTS (SELECT 1 FROM services2products WHERE product_id < 6);
