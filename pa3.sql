@@ -88,3 +88,12 @@ UPDATE employee e SET e.salary = e.salary * 0.8 WHERE NOT EXISTS
     (SELECT 1 FROM employee_service es WHERE es.employee_id = e.id);
 -- deletes products not linked to any service
 DELETE FROM product p WHERE NOT EXISTS (SELECT * FROM services2products sp WHERE sp.product_id = p.id);
+
+-- for bonus task 3
+
+SELECT user, host FROM mysql.user;
+CREATE USER 'yarrochka'@'%' IDENTIFIED BY 'password12345';
+GRANT ALL PRIVILEGES ON beauty_salon.* TO 'yarrochka'@'%';
+FLUSH PRIVILEGES;
+
+SELECT * FROM services;
