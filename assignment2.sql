@@ -363,3 +363,60 @@ WHERE NOT EXISTS
 
 DELETE FROM product p
 WHERE NOT EXISTS (SELECT * FROM services2products sp WHERE sp.product_id = p.id);
+
+
+-- HW4
+
+DELIMITER $$
+CREATE PROCEDURE product_details_by_name(IN product_name VARCHAR(255))
+BEGIN
+SELECT name, description, quantity, cost FROM product WHERE name = product_name;
+END $$
+
+CREATE PROCEDURE total_income_from_payments(OUT total INT)
+BEGIN
+SELECT SUM(amount) INTO total FROM payment;
+END $$
+
+CREATE PROCEDURE update_total_income_by_dates(INOUT total_income INT, IN start_date DATE, IN end_date DATE)
+BEGIN
+    DECLARE sales INT DEFAULT 0;
+SELECT SUM(amount) INTO sales FROM payment WHERE date BETWEEN start_date AND end_date;
+SET total_income = total_income + sales;
+END $$
+
+CREATE PROCEDURE update_product_quantity(IN prod_id INT, IN quantity_minus INT)
+BEGIN
+    DECLARE new_quantity INT;
+
+START TRANSACTION;
+
+UPDATE product SET quantity = quantity - quantity_minus WHERE id = prod_id;
+SELECT quantity INTO new_quantity FROM product WHERE id = prod_id;
+
+IF new_quantity < 0 THEN
+        ROLLBACK;
+ELSE
+        COMMIT;
+END IF;
+
+SELECT name, quantity FROM product;
+END $$
+DELIMITER ;
+
+-- calling the procedure to get details of a product by its name
+CALL product_details_by_name('Botox');
+
+-- calling the procedure to calculate the total income from all payments
+CALL total_income_from_payments(@total);
+SELECT @total;
+
+-- calling the procedure to update the total income by adding income from the sales between two dates
+SET @total_income = 10000;
+CALL update_total_income_by_dates(@total_income, '2024-02-11', '2024-02-16');
+SELECT @total_income;
+
+-- calling the procedure to update the quantity of a product (current quantity - provided quantity)
+CALL update_product_quantity(1, 5); -- in that case the quantity for Shampoo will be 15, so transaction will be commit
+
+CALL update_product_quantity(7, 10); -- in that case we will have quantity for Botox -5. so transaction will be rollback
