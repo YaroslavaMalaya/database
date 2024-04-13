@@ -112,7 +112,6 @@ INSERT INTO employee_service (employee_id, service_id) VALUES
 (2, 2),
 (3, 3),
 (3, 4),
-(3, 5),
 (4, 5);
 
 INSERT INTO customer (name, phone, email, address) VALUES
@@ -134,12 +133,12 @@ INSERT INTO appointment (customer_id, service_id, employee_id, date, status) VAL
 (2, 4, 3, '2024-02-12 12:30:00', 'Scheduled'),
 (3, 3, 3, '2024-02-12 12:40:00', 'Scheduled'),
 (4, 1, 2, '2024-02-13 09:30:00', 'Scheduled'),
-(5, 5, 3, '2024-02-14 15:30:00', 'Scheduled'),
+(5, 4, 3, '2024-02-14 15:30:00', 'Scheduled'),
 (6, 2, 2, '2024-02-15 10:00:00', 'Scheduled'),
 (7, 4, 4, '2024-02-15 11:30:00', 'Scheduled'),
 (8, 3, 4, '2024-02-16 12:40:00', 'Scheduled'),
 (1, 1, 1, '2024-02-10 12:10:00', 'Scheduled'),
-(2, 5, 3, '2024-02-11 11:00:00', 'Scheduled'),
+(2, 3, 3, '2024-02-11 11:00:00', 'Scheduled'),
 (3, 2, 2, '2024-02-11 10:00:00', 'Scheduled'),
 (4, 4, 3, '2024-02-12 12:40:00', 'Scheduled'),
 (5, 3, 3, '2024-02-12 11:40:00', 'Scheduled'),
