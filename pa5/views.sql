@@ -1,5 +1,12 @@
-
 -- HW5
+
+CREATE INDEX index_es_employee_id ON employee_service(employee_id);
+CREATE INDEX index_es_service_id ON employee_service(service_id);
+CREATE INDEX index_a_employee_id ON appointment(employee_id);
+CREATE INDEX index_a_service_id ON appointment(service_id);
+CREATE INDEX index_s_id ON services(id);
+CREATE INDEX index_e_name ON employee(name);
+CREATE INDEX index_a_date ON appointment(date);
 
 CREATE VIEW employee_schedule AS
 SELECT
