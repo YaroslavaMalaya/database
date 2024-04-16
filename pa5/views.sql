@@ -25,11 +25,11 @@ SELECT
         ELSE 'General staff'
         END AS kind_of_service
     FROM employee e 
-        JOIN employee_service es ON e.id = es.employee_id
-        JOIN services s ON es.service_id = s.id
-        JOIN appointment a ON e.id = a.employee_id
+        INNER JOIN employee_service es ON e.id = es.employee_id
+        INNER JOIN services s ON es.service_id = s.id
+        INNER JOIN appointment a ON e.id = a.employee_id
     WHERE
-        DATE(a.date) = '2024-02-14'
+        DATE(a.date) = CURDATE()
         GROUP BY e.id ORDER BY FIELD(e.position, 'Master', 'Trainee') DESC;
 
 SELECT * FROM employee_schedule;
