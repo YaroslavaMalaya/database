@@ -3,7 +3,8 @@ INSERT INTO services (name, description, duration, price) VALUES
 ('Coloring', 'Hair colouring and highlights', 120, 2500.00),
 ('Manicure', 'Nail care service', 60, 450.00),
 ('Pedicure', 'Foot and nail care service', 60, 450.00),
-('Facial', 'Facial massage with suitable masks, creams and pilings', 90, 1200.00);
+('Facial', 'Facial massage with suitable masks, creams and pilings', 90, 1200.00),
+('Forehead botox', 'Botox in the forehead', 60, 2800.00); 
 
 INSERT INTO product (name, description, quantity, cost) VALUES
 ('Shampoo', 'Hair cleaning product', 20, 550.50),
@@ -11,7 +12,9 @@ INSERT INTO product (name, description, quantity, cost) VALUES
 ('Nail Polish', 'Nail colouring product', 100, 84.99),
 ('Hair Dye', 'Product for hair colouring', 50, 789.99),
 ('Facial Cream 1', 'Cream for facial treatment', 50, 899.99),
-('Facial Cream 2', 'Cream for facial treatment', 50, 1000.00);
+('Facial Cream 2', 'Cream for facial treatment', 50, 1000.00),
+('Botox', 'Botox for forehead (dammy data)', 5, 1800.00), 
+('Botox', 'Botox for forehead (dammy data)', 0, 1200.00);
 
 INSERT INTO employee (name, phone, email, position, salary) VALUES
 ('Emily Carter', '+380664365804', 'emily1997@gmail.com', 'Master', 30000.00), -- stylist and colorist
@@ -19,25 +22,6 @@ INSERT INTO employee (name, phone, email, position, salary) VALUES
 ('Jordan Flat', '+380657578321', 'jordanflat@gmail.com', 'Trainee', 30000.00), -- manicurist and cosmetologist
 ('Casey Kim', '+380970746947', 'caseykiki@gmail.com', 'Master', 50000.00), -- cosmetologist 
 ('Drew Morgan', '+380670768334', 'morgancap@gmail.com', 'Trainee', 25000.00); -- receptionist 
-
-INSERT INTO services2products (service_id, product_id) VALUES
-(1, 1),
-(1, 2),
-(2, 4),
-(3, 3),
-(4, 3),
-(5, 5),
-(5, 6);
-
-INSERT INTO employee_service (employee_id, service_id) VALUES
-(1, 1),
-(1, 2),
-(2, 1),
-(2, 2),
-(3, 3),
-(3, 4),
-(3, 5),
-(4, 5);
 
 INSERT INTO customer (name, phone, email, address) VALUES
 ('Bryce Hall', '+380994568824', 'bryce.hall@gmail.com', '123 Main St'),
@@ -50,19 +34,20 @@ INSERT INTO customer (name, phone, email, address) VALUES
 ('Kylie Jenner', '+380950501629', 'jennertop@gmail.com', '12 Yamska St'),
 ('Emma Stoune', '+380993400124', 'emma12345@gmail.com', '91 Wendy St'),
 ('Robert Patisson', '+380676071506', 'robpat97@gmail.com', '123 Koupline St'),
-('Kim Kardashian', '+3809501843819', 'kimmi@gmail.com', '1 Travneva St');
+('Kim Kardashian', '+3809501843819', 'kimmi@gmail.com', '1 Travneva St'),
+('Fennis Lorden', '+3809323543819', 'fennis@gmail.com', '12 Gerbers St'); 
 
 INSERT INTO appointment (customer_id, service_id, employee_id, date, status) VALUES
 (1, 2, 1, '2024-02-10 10:00:00', 'Scheduled'),
 (2, 4, 3, '2024-02-12 12:30:00', 'Scheduled'),
 (3, 3, 3, '2024-02-12 12:40:00', 'Scheduled'),
 (4, 1, 2, '2024-02-13 09:30:00', 'Scheduled'),
-(5, 5, 3, '2024-02-14 15:30:00', 'Scheduled'),
+(5, 4, 3, '2024-02-14 15:30:00', 'Scheduled'),
 (6, 2, 2, '2024-02-15 10:00:00', 'Scheduled'),
 (7, 4, 4, '2024-02-15 11:30:00', 'Scheduled'),
 (8, 3, 4, '2024-02-16 12:40:00', 'Scheduled'),
 (1, 1, 1, '2024-02-10 12:10:00', 'Scheduled'),
-(2, 5, 3, '2024-02-11 11:00:00', 'Scheduled'),
+(2, 3, 3, '2024-02-11 11:00:00', 'Scheduled'),
 (3, 2, 2, '2024-02-11 10:00:00', 'Scheduled'),
 (4, 4, 3, '2024-02-12 12:40:00', 'Scheduled'),
 (5, 3, 3, '2024-02-12 11:40:00', 'Scheduled'),
@@ -72,7 +57,9 @@ INSERT INTO appointment (customer_id, service_id, employee_id, date, status) VAL
 (1, 4, 3, '2024-02-15 17:30:00', 'Scheduled'),
 (9, 3, 3, '2024-02-15 10:40:00', 'Scheduled'),
 (10, 1, 1, '2024-02-16 13:00:00', 'Scheduled'),
-(11, 5, 4, '2024-02-16 11:00:00', 'Scheduled');
+(11, 5, 4, '2024-02-16 11:00:00', 'Scheduled'),
+(12, 1, 1, '2024-05-16 13:00:00', 'Scheduled'), 
+(12, 5, 4, '2024-05-1 11:00:00', 'Scheduled');  
 
 INSERT INTO payment (appointment_id, amount, method, date)
 SELECT
@@ -84,3 +71,21 @@ FROM
     appointment a
         JOIN
     services s ON a.service_id = s.id;
+
+
+SELECT name, description, price FROM services WHERE price > 1000 ORDER BY price DESC;
+
+SELECT services.name, COUNT(*) as appointment_count FROM appointment  
+   JOIN services ON appointment.service_id = services.id WHERE appointment.status = 'Scheduled' -- inner join
+    GROUP BY services.name ORDER BY appointment_count DESC;
+
+SELECT customer.name AS customer_name, services.name AS service_name, appointment.date FROM appointment
+    JOIN customer ON appointment.customer_id = customer.id
+    JOIN services ON appointment.service_id = services.id
+    WHERE appointment.status = 'Scheduled' ORDER BY appointment.date ASC LIMIT 5;
+
+SELECT name, position, salary FROM employee WHERE salary > 30000 ORDER BY salary DESC;
+
+SELECT customer.name, customer.phone, SUM(payment.amount) AS total_spent FROM payment  
+    JOIN customer ON payment.customer_id = customer.id  WHERE MONTH(payment.date) = 2 -- this month
+    GROUP BY payment.customer_id ORDER BY total_spent DESC LIMIT 5;
