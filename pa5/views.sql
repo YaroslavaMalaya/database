@@ -31,7 +31,7 @@ SELECT
         INNER JOIN appointment a ON e.id = a.employee_id
         INNER JOIN services s ON a.service_id = s.id
     WHERE
-        DATE(a.date) = '2024-02-14'
+        DATE(a.date) = CURDATE()
         ORDER BY FIELD(e.position, 'Master', 'Trainee') DESC;
 
 SELECT * FROM employee_schedule;
