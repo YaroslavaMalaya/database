@@ -1,0 +1,16 @@
+# Ignore everything
+/*
+
+# But do not ignore .gitignore and README.md
+!.gitignore
+!README.md
+
+# Do not ignore directories pa1 through pa5
+!pa1/
+!pa2/
+!pa3/
+!pa4/
+!pa5/
+
+# Do not ignore reserch directory
+!reserch/
